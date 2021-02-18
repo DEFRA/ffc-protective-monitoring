@@ -1,8 +1,8 @@
 {
-  "name": "ffc-template-node",
+  "name": "ffc-protective-monitoring",
   "version": "0.1.0",
-  "description": "description-of-project-goes-here",
-  "homepage": "https://github.com/DEFRA/ffc-template-node",
+  "description": "Publish protective monitoring events",
+  "homepage": "https://github.com/DEFRA/ffc-protective-monitoring",
   "main": "app/index.js",
   "scripts": {
     "test": "jest --runInBand",
