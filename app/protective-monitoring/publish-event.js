@@ -21,6 +21,7 @@ class PublishEvent {
       })
       console.log({ res })
       console.log({ payload })
+    }
   }
 }
 
