@@ -1,10 +1,9 @@
 const Joi = require('joi')
 
 module.exports = Joi.object({
-  user: Joi.string().required(),
+  user: Joi.string().optional(),
   sessionid: Joi.string().required(),
   datetime: Joi.date().required(),
-  environment: Joi.string().required(),
   version: Joi.string().required(),
   application: Joi.string().required(),
   component: Joi.string().required(),
@@ -12,8 +11,8 @@ module.exports = Joi.object({
   pmccode: Joi.string().required(),
   priority: Joi.string().required(),
   details: Joi.object({
-    transactioncode: Joi.string().required(),
-    message: Joi.string().required(),
-    additionalinfo: Joi.string().required()
+    transactioncode: Joi.string().optional(),
+    message: Joi.string().optional(),
+    additionalinfo: Joi.string().optional()
   })
 })

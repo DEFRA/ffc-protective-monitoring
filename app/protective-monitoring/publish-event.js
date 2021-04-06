@@ -8,19 +8,27 @@ class PublishEvent {
   }
 
   async sendEvent (jsonMessage) {
-    if (this.endPoint === null) {
-      console.log('Protective Monitoring end point not set!')
-    } else if (!this.log) {
-      console.log('Protective Monitoring logging disabled!')
-    } else {
-      await messageSchema.validateAsync(jsonMessage)
+    try {
+      if (this.endPoint === null || this.endPoint === '') {
+        throw new Error('Protective Monitoring endpoint not set!')
+      } else if (!this.log) {
+        console.log('Protective Monitoring logging disabled!')
+      } else {
+        const validationResult = messageSchema.validate(jsonMessage)
 
-      const { res, payload } = await wreck.post(this.endPoint, {
-        payload: jsonMessage,
-        json: true
-      })
-      console.log({ res })
-      console.log({ payload })
+        if (validationResult.error) {
+          throw new Error(`JSON message is invalid. ${validationResult.error.message}`)
+        }
+
+        const { res, payload } = await wreck.post(this.endPoint, {
+          payload: jsonMessage,
+          json: true
+        })
+        console.log({ res })
+        console.log({ payload })
+      }
+    } catch (error) {
+      console.log(`sendEvent Error. ${error.message}`)
     }
   }
 }
