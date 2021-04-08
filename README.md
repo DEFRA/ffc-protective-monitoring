@@ -1,35 +1,46 @@
-# FFC Template Node
+# ffc-protective-monitoring
 
-Template to support rapid delivery of microservices for FFC Platform. It contains the configuration needed to deploy a simple Hapi Node server to the Azure Kubernetes Platform.
+NPM module for logging protective monitoring events into Azure Logic App
 
 ## Usage
 
-Create a new repository from this template and run `./rename.js` specifying the new name of the project and the description to use e.g.
+### Installation
+
 ```
-./rename.js ffc-demo-web "Web frontend for demo workstream"
+npm install --save ffc-protective-monitoring
+
 ```
 
-The script will update the following:
+### Configuration
 
-* `package.json`: update `name`, `description`, `homepage`
-* `docker-compose.yaml`: update the service name, `image` and `container_name`
-* `docker-compose.test.yaml`: update the service name, `image` and `container_name`
-* `docker-compose.override.yaml`: update the service name, `image` and `container_name`
-* Rename `helm/ffc-template-node`
-* `helm/ffc-template-node/Chart.yaml`: update `description` and `name`
-* `helm/ffc-template-node/values.yaml`: update  `name`, `namespace`, `workstream`, `image`, `containerConfigMap.name`
-* `helm/ffc-template-node/templates/_container.yaml`: update the template name
-* `helm/ffc-template-node/templates/cluster-ip-service.yaml`: update the template name and list parameter of include
-* `helm/ffc-template-node/templates/config-map.yaml`: update the template name and list parameter of include
-* `helm/ffc-template-node/templates/deployment.yaml`: update the template name, list parameter of deployment and container includes
+`endPoint` - The protective monitoring endpoint for the Azure Logic App
 
-### Notes on automated rename
+`log` - Optional parameter to disable sending protective monitoring data. If not set, the value is `true`
 
-* The Helm chart deployment values in `helm/ffc-template-node/values.yaml` may need updating depending on the resource needs of your microservice
-* The rename is a one-way operation i.e. currently it doesn't allow the name being changed from to be specified
-* There is some validation on the input to try and ensure the rename is successful, however, it is unlikely to stand up to malicious entry
-* Once the rename has been performed the script can be removed from the repo
-* Should the rename go awry the changes can be reverted via `git clean -df && git checkout -- .`
+#### Example usage
+
+```
+const { PublishEvent } = require('ffc-protective-monitoring')
+
+const protectiveMonitoring = new PublishEvent(PROTECTIVE_MONITORING_URL)
+
+await protectiveMonitoring.sendEvent({
+  sessionid: 'e66d78f5-a58d-46f6-a9b4-f8c90e99b6dc',
+  datetime: '2020-10-09T12:51:41.381Z',
+  version: '1.1',
+  application: 'FI001',
+  component: '<internal app name>',
+  ip: '127.0.0.1',
+  pmccode: '0703',
+  priority: '0',
+  details: {
+    transactioncode: '2306',
+    message: 'User successfully downloaded a stored document',
+    additionalinfo: '<details or obfuscated location of document, etc.>'
+  }
+})
+
+```
 
 ## Licence
 

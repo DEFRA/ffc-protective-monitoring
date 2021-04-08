@@ -32,7 +32,7 @@ describe('Publish Event', () => {
   })
 
   test('Logging into protective monitoring is not required', async function () {
-    const publishEvent = new PublishEvent('http://localhost', false)
+    const publishEvent = new PublishEvent(null, false)
 
     await publishEvent.sendEvent('test json')
 
@@ -47,10 +47,12 @@ describe('Publish Event', () => {
       throw new Error()
     })
 
-    await publishEvent.sendEvent('test json')
-
-    expect(wreck.post).toHaveBeenCalledTimes(0)
-    expect(messageSchema.validate).toHaveBeenCalledTimes(1)
+    try {
+      await publishEvent.sendEvent('test json')
+    } catch (error) {
+      expect(wreck.post).toHaveBeenCalledTimes(0)
+      expect(messageSchema.validate).toHaveBeenCalledTimes(1)
+    }
   })
 
   test('Required sessionid property not present in JSON', async function () {
@@ -72,17 +74,21 @@ describe('Publish Event', () => {
     }
 
     const validationResult = {
-      error: '"sessionid" is required'
+      error: {
+        message: '"sessionid" is required'
+      }
     }
 
     messageSchema.validate.mockReturnValue(validationResult)
 
-    await publishEvent.sendEvent(data)
+    try {
+      await publishEvent.sendEvent(data)
+    } catch (error) {
+      expect(error.message).toBe('Protective monitoring event schema is invalid. "sessionid" is required')
 
-    expect(validationResult.error).toBe('"sessionid" is required')
-
-    expect(messageSchema.validate).toHaveBeenCalledTimes(1)
-    expect(wreck.post).toHaveBeenCalledTimes(0)
+      expect(messageSchema.validate).toHaveBeenCalledTimes(1)
+      expect(wreck.post).toHaveBeenCalledTimes(0)
+    }
   })
 
   test('Invalid environment property in JSON', async function () {
@@ -105,17 +111,21 @@ describe('Publish Event', () => {
     }
 
     const validationResult = {
-      error: '"environment" is not allowed'
+      error: {
+        message: '"environment" is not allowed'
+      }
     }
 
     messageSchema.validate.mockReturnValue(validationResult)
 
-    await publishEvent.sendEvent(data)
+    try {
+      await publishEvent.sendEvent(data)
+    } catch (error) {
+      expect(error.message).toBe('Protective monitoring event schema is invalid. "environment" is not allowed')
 
-    expect(validationResult.error).toBe('"environment" is not allowed')
-
-    expect(messageSchema.validate).toHaveBeenCalledTimes(1)
-    expect(wreck.post).toHaveBeenCalledTimes(0)
+      expect(messageSchema.validate).toHaveBeenCalledTimes(1)
+      expect(wreck.post).toHaveBeenCalledTimes(0)
+    }
   })
 
   test('Successfully logged protective monitoring event', async function () {

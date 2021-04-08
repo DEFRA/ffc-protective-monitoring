@@ -8,27 +8,23 @@ class PublishEvent {
   }
 
   async sendEvent (jsonMessage) {
-    try {
-      if (this.endPoint === null || this.endPoint === '') {
-        throw new Error('Protective Monitoring endpoint not set!')
-      } else if (!this.log) {
-        console.log('Protective Monitoring logging disabled!')
-      } else {
-        const validationResult = messageSchema.validate(jsonMessage)
+    if (this.endPoint) {
+      const validationResult = messageSchema.validate(jsonMessage)
 
-        if (validationResult.error) {
-          throw new Error(`JSON message is invalid. ${validationResult.error.message}`)
-        }
+      if (validationResult.error) {
+        throw new Error(`Protective monitoring event schema is invalid. ${validationResult.error.message}`)
+      }
 
-        const { res, payload } = await wreck.post(this.endPoint, {
+      try {
+        await wreck.post(this.endPoint, {
           payload: jsonMessage,
           json: true
         })
-        console.log({ res })
-        console.log({ payload })
+      } catch (error) {
+        console.error(`Unable to send protective monitoring event. ${error.message}`)
       }
-    } catch (error) {
-      console.log(`sendEvent Error. ${error.message}`)
+    } else if (!this.endPoint && this.log) {
+      console.log('Protective monitoring endpoint not set')
     }
   }
 }
