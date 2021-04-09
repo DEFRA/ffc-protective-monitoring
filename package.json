@@ -1,19 +1,22 @@
 {
-  "name": "ffc-template-node",
-  "version": "0.1.0",
-  "description": "description-of-project-goes-here",
-  "homepage": "https://github.com/DEFRA/ffc-template-node",
+  "name": "ffc-protective-monitoring",
+  "version": "1.0.0",
+  "description": "Publish protective monitoring events",
+  "homepage": "https://github.com/DEFRA/ffc-protective-monitoring",
   "main": "app/index.js",
   "scripts": {
     "test": "jest --runInBand",
     "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
-    "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js"
+    "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js",
+    "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js --runInBand"
   },
   "author": "Defra",
   "contributors": [],
   "license": "OGL-UK-3.0",
   "dependencies": {
-    "@hapi/hapi": "^20.0.0"
+    "@hapi/hapi": "^20.0.0",
+    "joi": "^17.4.0",
+    "wreck": "^14.2.0"
   },
   "devDependencies": {
     "jest": "^26.4.0",
