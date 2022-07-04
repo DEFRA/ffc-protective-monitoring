@@ -1,5 +1,5 @@
 const messageSchema = require('./message-schema')
-const wreck = require('wreck')
+const wreck = require('@hapi/wreck')
 
 class PublishEvent {
   constructor (endPoint, log = true) {
