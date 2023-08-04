@@ -15,7 +15,7 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "joi": "17.6.4",
-    "@hapi/wreck": "18.0.0"
+    "@hapi/wreck": "18.0.1"
   },
   "devDependencies": {
     "jest": "29.2.2",
